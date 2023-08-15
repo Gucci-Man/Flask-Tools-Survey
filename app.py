@@ -1,0 +1,48 @@
+from flask import Flask, request, render_template, redirect, flash, jsonify
+from flask_debugtoolbar import DebugToolbarExtension
+from surveys import *
+
+app = Flask(__name__)
+
+app.config["SECRET_KEY"] = "IAMBATMAN"
+app.config["DEBUG_TB_INTERCEPT_REDIRECTS"] = False
+debug = DebugToolbarExtension(app)
+
+
+quest_length = len(satisfaction_survey.questions)
+responses = []
+
+
+@app.route("/")
+def home_page():
+    return render_template(
+        "root.html",
+        title=satisfaction_survey.title,
+        steps=satisfaction_survey.instructions,
+    )
+
+
+@app.route("/questions/<int:quest_num>")
+def question(quest_num):
+    question = satisfaction_survey.questions[quest_num].question
+    choice1 = satisfaction_survey.questions[quest_num].choices[0]
+    choice2 = satisfaction_survey.questions[quest_num].choices[1]
+    return render_template(
+        "question.html",
+        question=question,
+        choice1=choice1,
+        choice2=choice2,
+        quest_num=quest_num,
+    )
+
+
+@app.route("/answer/<int:quest_num>", methods=["POST"])
+def answer(quest_num):
+    quest_num += 1
+    choice = request.form["choice"]
+    responses.append(choice)
+    flash(f"choice was {responses[quest_num-1]}")
+    if quest_num >= quest_length:
+        return redirect("/")
+    else:
+        return redirect(f"/questions/{quest_num}")
