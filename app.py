@@ -68,7 +68,14 @@ def answer(quest_num):
     quest_num += 1
     choice = request.form.get("choice")
     responses.append(choice)
-    session["responses"].append(choice)
+
+    # save response to session
+    session_responses = session["responses"]
+    session_responses.append(choice)
+    session["responses"] = session_responses
+
+    print(session["responses"])
+
     flash(f"Choice was {responses[quest_num-1]}")
 
     for ans in range(len(responses)):
