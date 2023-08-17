@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template, redirect, flash, jsonify
+from flask import Flask, request, session, render_template, redirect, flash, jsonify
 from flask_debugtoolbar import DebugToolbarExtension
 from surveys import satisfaction_survey as survey
 
@@ -24,9 +24,10 @@ def home_page():
     )
 
 
-@app.route("/begin")
+@app.route("/begin", methods=["POST"])
 def start_survey():
     """Start survey"""
+    session["response"] = []
 
     return redirect("/questions/0")
 
@@ -45,8 +46,11 @@ def question(quest_num):
         return redirect("/thanks")
 
     question = survey.questions[quest_num].question
-    choice1 = survey.questions[quest_num].choices[0].replace(" ", "_")
-    choice2 = survey.questions[quest_num].choices[1].replace(" ", "_")
+    # choice1 = survey.questions[quest_num].choices[0].replace(" ", "_")
+    # choice2 = survey.questions[quest_num].choices[1].replace(" ", "_")
+
+    choice1 = survey.questions[quest_num].choices[0]
+    choice2 = survey.questions[quest_num].choices[1]
     return render_template(
         "question.html",
         question=question,
@@ -64,7 +68,11 @@ def answer(quest_num):
     quest_num += 1
     choice = request.form.get("choice")
     responses.append(choice)
+    session["responses"].append(choice)
     flash(f"Choice was {responses[quest_num-1]}")
+
+    for ans in range(len(responses)):
+        print(ans)
 
     if quest_num >= quest_length:
         # User has answered all the questions
