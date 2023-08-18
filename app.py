@@ -27,7 +27,7 @@ def home_page():
 @app.route("/begin", methods=["POST"])
 def start_survey():
     """Start survey"""
-    session["response"] = []
+    session["responses"] = []
 
     return redirect("/questions/0")
 
@@ -78,9 +78,6 @@ def answer(quest_num):
 
     flash(f"Choice was {responses[quest_num-1]}")
 
-    for ans in range(len(responses)):
-        print(ans)
-
     if quest_num >= quest_length:
         # User has answered all the questions
         return redirect("/thanks")
@@ -91,4 +88,6 @@ def answer(quest_num):
 @app.route("/thanks")
 def thanks():
     """Thank the user once they finish"""
+    # resets the responses to empty list if user wish to answer survey again
+    responses = []
     return render_template("thanks.html")

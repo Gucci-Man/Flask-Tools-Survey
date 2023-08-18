@@ -3,9 +3,9 @@
 {% block content%}
 <h1>{{question}}</h1>
 <form action="/answer/{{quest_num}}" method="POST">
-    <input type="radio" id="choice1" name="choice" value={{choice1}}>
+    <input type="radio" id="choice1" name="choice" value="{{choice1}}">
     <label for="choice1">{{choice1}}</label><br>
-    <input type="radio" id="choice2" name="choice" value={{choice2}}>
+    <input type="radio" id="choice2" name="choice" value="{{choice2}}">
     <label for="choice2">{{choice2}}</label><br>
     <button>Submit</button>
 </form>
