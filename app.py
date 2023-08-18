@@ -46,8 +46,6 @@ def question(quest_num):
         return redirect("/thanks")
 
     question = survey.questions[quest_num].question
-    # choice1 = survey.questions[quest_num].choices[0].replace(" ", "_")
-    # choice2 = survey.questions[quest_num].choices[1].replace(" ", "_")
 
     choice1 = survey.questions[quest_num].choices[0]
     choice2 = survey.questions[quest_num].choices[1]
